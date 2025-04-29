@@ -10,7 +10,10 @@ goods in the warehouse for a given sequence of pallet shipment;
 - [x] Development of algorithms for optimizing the placement of goods in a warehouse with a price
 we speed up the processing of orders and efficient utilization of space;
 
+# Model description
 Robots move around the warehouse according to Dijkstra’s algorithm, while delivering boxes of orders (TEST3-SIMSIM). Robots cannot overtake each other. Boxes from the channel are picked up from below and placed on top.
+
+During the simulation, robots exchange messages, receiving information about the state of other robots and further targeted actions.
 
 # Installation and usage
 
