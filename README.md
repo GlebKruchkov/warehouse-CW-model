@@ -1,28 +1,31 @@
-# Summary
-
-Models for a innovative fully robotic warehouse for storing boxed goods.
-A discrete multiagent simulation of the movement of shuttles in a warehouse for a given sequence of pallet shipments has been implemented. Different strategies for placement of boxes in various areas of a warehouse are evaluated, as well as optimal routing patterns for shuttles for a given topology of a warehouse. Also estimated is the optimal number of shuttles that maximizes the warehouse productivity.
-
 # Keywords
 
 robotic warehouse, boxes placement optimization, multiagent simulation, ROSS, C
 
-# Usage
+# Goals
 
-If you are creating your own model feel free to fork this repository.
-As you develop, please replace "model" with appropriately descriptive names for your variables, files, and functions.
+- [x] Implementation of discrete multi-agent modeling of robot movement
+goods in the warehouse for a given sequence of pallet shipment;
 
-# Installation
+- [x] Development of algorithms for optimizing the placement of goods in a warehouse with a price
+we speed up the processing of orders and efficient utilization of space;
+
+# Installation and usage
 
 This model can be built by ROSS by sym-linking it into the ROSS/models directory and building with `-DROSS_BUILD_MODELS=ON`
 
 ``` shell
 git clone https://github.com/ROSS-org/ROSS
-git clone https://github.com/ROSS-org/template-model
+git clone https://github.com/ROSS-org/warehouse-CW-model
 cd ROSS/models
-ln -s ../../template-model ./
+ln -s ../../warehouse-CW-model ./
 cd ../
 mkdir build
+cd build
 cmake ../ -DROSS_BUILD_MODELS=ON
 make
+./model
 ```
+
+All information about the progress of the simulation will be recorded in the log (full_actions_log.txt)
+
