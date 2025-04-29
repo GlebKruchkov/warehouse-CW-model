@@ -63,15 +63,14 @@ void displayModelSettings()
 //for doxygen
 #define model_main main
 
-
 int model_main (int argc, char* argv[]) {
-  bots_starting_positions = fopen("../../../../WarehouseModel/bots_starting_positions.csv", "r");
-  f = fopen("../../../../WarehouseModel/full_actions_log.txt", "w");
-  sku_mileage = fopen("../../../../WarehouseModel/sku_mileage.txt", "w");
-  const char *directory_path = "../../../../WarehouseModel/TEST3-SIMSIM";
+  bots_starting_positions = fopen("../../../../warehouse-CW-model/bots_starting_positions.csv", "r");
+  f = fopen("../../../../warehouse-CW-model/full_actions_log.txt", "w");
+  sku_mileage = fopen("../../../../warehouse-CW-model/sku_mileage.txt", "w");
+  const char *directory_path = "../../../../warehouse-CW-model/TEST3-SIMSIM";
   struct dirent *entry;
   DIR *dp = opendir(directory_path);
-  sqlite3_open("../../../../WarehouseModel/ross-sqlite.db", &Store.db);
+  sqlite3_open("../../../../warehouse-CW-model/ross-sqlite.db", &Store.db);
 
   while ((entry = readdir(dp))) {
     if (strstr(entry->d_name, ".csv") != NULL) {

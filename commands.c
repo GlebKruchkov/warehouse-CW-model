@@ -433,22 +433,6 @@ int cubic_distribution(int pos, int k) {
   return k * (pos + 1) * (pos + 1) * (pos + 1); 
 }
 
-int weigh_calculate(int pos) {
-  return 0;
-}
-
-int get_pos_by_coef(int coef, int SKU) {
-  int total = 0;
-  for (int i = 0; i < 51; ++i) {
-    total += Store.box_valiability[i];
-  }
-  int average = total / 50;
-  if (coef < average) {
-    return 7;
-  }
-  return 0;
-}
-
 int Add_Box(sqlite3 **db1, int type, int process) {
     struct sqlite3 * db = (struct sqlite3 *) *db1;
     int col = Store.robots[process - 1].col;
@@ -462,7 +446,6 @@ int Add_Box(sqlite3 **db1, int type, int process) {
     Store.conveyor[col].boxes[r].empty = 0;
     Store.conveyor[col].boxes[r].width = Store.b_w[type];
     Store.conveyor[col].box_quantity += 1;
-    Store.box_valiability[type] += weigh_calculate(r);
     Store.top_sku_in_channel[col] = type;
 
     insert_data(db1, type, r, col, Store.b_w[type], Store.conveyor[col].box_quantity);
@@ -490,16 +473,6 @@ void Swap_Boxes(sqlite3 **db1, int col, int row1, int row2) {
     char sql2[100];
     sprintf(sql2, "DELETE FROM Warehouse WHERE Type = %d AND Row = %d AND Column = %d", Store.conveyor[col].boxes[row2].SKU, row2, col);
     sqlite3_exec(db, sql2, 0, 0, &err_msg);
-
-    if (Store.conveyor[col].boxes[row1].SKU != -1) {
-      Store.box_valiability[Store.conveyor[col].boxes[row1].SKU] -= weigh_calculate(row1);
-      Store.box_valiability[Store.conveyor[col].boxes[row1].SKU] += weigh_calculate(row2);
-    }
-
-    if (Store.conveyor[col].boxes[row2].SKU != -1) {
-      Store.box_valiability[Store.conveyor[col].boxes[row2].SKU] -= weigh_calculate(row2);
-      Store.box_valiability[Store.conveyor[col].boxes[row2].SKU] += weigh_calculate(row1);
-    }
     Store.conveyor[col].boxes[row1].empty = Store.conveyor[col].boxes[row2].empty;
     Store.conveyor[col].boxes[row1].SKU = Store.conveyor[col].boxes[row2].SKU;
     Store.conveyor[col].boxes[row1].width = Store.conveyor[col].boxes[row2].width;
@@ -527,8 +500,6 @@ int Remove_Boxes(sqlite3 **db1, int type, int *time, int *l_id, int process) {
     Store.conveyor[col].boxes[MAX_BOXES - 1].SKU = -1;
     Store.conveyor[col].boxes[MAX_BOXES - 1].empty = 1;
     Store.conveyor[col].boxes[MAX_BOXES - 1].width = -1;
-
-    Store.box_valiability[type] -= weigh_calculate(MAX_BOXES - 1);
 
     for (int i = MAX_BOXES - 1; i >= 1; --i) {
         Swap_Boxes(db1, col, i, i - 1);

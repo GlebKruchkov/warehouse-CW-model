@@ -3,7 +3,6 @@
 void init_robot(robot* r, int id, vertex start, vertex finish, double speed, char* robot_cur_cell) {
     r->id = id;
     r->cur_pos = start;
-    r->finish_pos = finish;
     r->speed = speed;
     r->path = NULL;
     r->path_length = 0;
@@ -12,23 +11,14 @@ void init_robot(robot* r, int id, vertex start, vertex finish, double speed, cha
     r->current_waypoint_on_path = 0;
     r->reached = false;
     r->waiting = false;
-    r->tmp_fl = 1;
     r->cur_task = DEFAULT;
     r->cur_box = -1;
-    r->pre_reserved = -1;
     r->low_SKU = -1;
     r->col = -1;
     r->row = -1;
-    r->kill = 0;
     r->has_box = false;
     r->reserved_channel = -1;
-    r->cur_time = 0;
-    r->goal_time = 0;
     r->cur_cell = Store.cells[0];
-    r->prev_vertex = -1;
-    r->prev_box_type = -1;
-    r->prev_channel = -1;
-    r->prev_tr_id = -1;
     r->box_to_add = -1;
     r->is_free = true;
 }
@@ -215,41 +205,6 @@ void InitVertexNames(char ch, int from, int to) {
     }
 }
 
-void init_graph() {
-    for (int i = 0; i < 49; ++i) {
-        Store.direction_graph[i] = -1;
-    }
-
-    Store.direction_graph[6] = 7;
-
-    Store.direction_graph[7] = 18;
-
-    Store.direction_graph[18] = 19;
-
-    Store.direction_graph[19] = 30;
-
-    Store.direction_graph[30] = 31;
-
-    Store.direction_graph[31] = 42;
-
-    Store.direction_graph[42] = 43;
-
-    Store.direction_graph[48] = 37;
-
-    Store.direction_graph[37] = 36;
-
-    Store.direction_graph[36] = 25;
-
-    Store.direction_graph[25] = 24;
-
-    Store.direction_graph[24] = 13;
-
-    Store.direction_graph[13] = 12;
-
-    Store.direction_graph[12] = 0;
-}
-
-
 void ConveyorsInit()
 {
     char *err_msg = 0;
@@ -257,8 +212,6 @@ void ConveyorsInit()
     char *sql = "CREATE TABLE Warehouse(Type INTEGER, Row INTEGER, Column INTEGER, Width INTEGER, Channel_Width INTEGER, Box_Quantity INTEGER)";
     sqlite3_exec(Store.db, sql_del, 0, 0, &err_msg);
     sqlite3_exec(Store.db, sql, 0, 0, &err_msg);
-
-    init_graph();
 
     InitVertexNames('A', 1, MAX_RACKS + 1);
     InitVertexNames('B', MAX_RACKS * 2 + 3, MAX_RACKS + 2);
@@ -357,10 +310,6 @@ void ConveyorsInit()
         }
     }
     
-    for (int i = 0; i < MAX_ROBOTS + 1; ++i) {
-        Store.used[i] = 0;
-    }
-    Store.boxes_to_deliver = 0;
     Store.cur_file = 0;
 
     for (int i = 0; i < MAX_ROBOTS + 1; ++i) {

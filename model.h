@@ -57,7 +57,6 @@ static const int threshold = (int)((MAX_BOXES * MAX_CONVEYORS) / (high_border - 
 
 static int rev_quantity = 0;
 
-
 typedef struct
 {
     bool reserved;
@@ -131,7 +130,6 @@ typedef struct
 
     int id;
     vertex cur_pos;
-    vertex finish_pos;
     double speed; // m/s
     int* path;
     int path_length;
@@ -149,23 +147,10 @@ typedef struct
     int reserved_channel;
     int low_SKU;
 
-    int kill;
     cell cur_cell;
     cell goal_cell;
     cell temp_reverse_goal_cell;
-
     int temp_reverse_SKU;
-
-    int pre_reserved;
-
-    int cur_time;
-    int goal_time;
-    int tmp_fl;
-
-    int prev_vertex;
-    int prev_box_type;
-    int prev_channel;
-    int prev_tr_id;
 
     bool is_free;
 
@@ -202,14 +187,11 @@ struct _Store
     int distribution[50];
 
     int vertex_robots[MAX_VERTEXES];
-    // bool start_depalletize_first_time[CNT_OF_SKU];
 
     char cur_order[50];
 
     char files[15][1024];
     int cur_file;
-
-    int direction_graph[MAX_VERTEXES];
 
     char vertexes[MAX_VERTEXES + 1][5];
     int box_data[MAX_ROBOTS + 1][2];
@@ -217,7 +199,6 @@ struct _Store
 
     robot robots[MAX_ROBOTS];
     cell cells[MAX_VERTEXES];
-
     
     int b_w[50];
     box_pair box_width[50];
@@ -228,13 +209,6 @@ struct _Store
     int cnt_boxes_type[50];
     int cnt_boxes_type_const[50];
     struct _conveyor conveyor[MAX_CONVEYORS];
-
-    int used[MAX_ROBOTS + 1];
-    int nt_used[MAX_ROBOTS + 1];
-    int boxes_to_deliver;
-    int type_to_add;
-
-    int box_valiability[50];
 };
 
 struct _Store Store;

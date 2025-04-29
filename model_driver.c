@@ -143,13 +143,6 @@ void model_event (state *s, tw_bf *bf, message *in_msg, tw_lp *lp) {
           // get_best_box_without_sql();
           // find_data_without_SKU_in_col(&(Store.db), Store.robots[self - 1].box_to_add);
           find_lower_data_by_width_different_type(&(Store.db), Store.robots[self - 1].box_to_add);
-          // int coef = get_pos_by_coef(Store.box_valiability[Store.robots[self - 1].box_to_add ], Store.robots[self - 1].box_to_add);
-
-          // if (coef == 7) {
-          //   find_lower_data_by_width(&(Store.db), Store.robots[self - 1].box_to_add);
-          // } else {
-          //   get_best_box_without_sql();
-          // }
 
           if (best_box.row == -1 || best_box.column == -1) { // we did not find where to put the box (there is no free space or channels)
             Store.robots[self - 1].is_free = true; // robot is free
