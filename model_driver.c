@@ -438,7 +438,6 @@ void model_final (state *s, tw_lp *lp) {
     }
     fprintf(sku_mileage, "%*s %*d\n", 8, "with_box", 10, dist_with_sku);
     fprintf(sku_mileage, "%*s %*d\n", 5, "empty", 13, Store.dist_without_SKU);
-    fprintf(sku_mileage, "%d\n", rev_quantity);
   }
   return;
 }
