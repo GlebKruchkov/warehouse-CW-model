@@ -429,10 +429,6 @@ void get_best_box_without_sql_random() {
   }
 }
 
-int cubic_distribution(int pos, int k) {
-  return k * (pos + 1) * (pos + 1) * (pos + 1); 
-}
-
 int Add_Box(sqlite3 **db1, int type, int process) {
     struct sqlite3 * db = (struct sqlite3 *) *db1;
     int col = Store.robots[process - 1].col;
