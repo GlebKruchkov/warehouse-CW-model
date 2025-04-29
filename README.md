@@ -10,6 +10,8 @@ goods in the warehouse for a given sequence of pallet shipment;
 - [x] Development of algorithms for optimizing the placement of goods in a warehouse with a price
 we speed up the processing of orders and efficient utilization of space;
 
+Robots move around the warehouse according to Dijkstra’s algorithm, while delivering boxes of orders (TEST3-SIMSIM). Robots cannot overtake each other. Boxes from the channel are picked up from below and placed on top.
+
 # Installation and usage
 
 This model can be built by ROSS by sym-linking it into the ROSS/models directory and building with `-DROSS_BUILD_MODELS=ON`
