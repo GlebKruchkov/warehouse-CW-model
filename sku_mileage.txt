@@ -51,4 +51,3 @@ SKU       mileage
  50          3919
 with_box     613007
 empty       1020458
-2132
