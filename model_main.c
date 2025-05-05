@@ -65,8 +65,8 @@ void displayModelSettings()
 
 int model_main (int argc, char* argv[]) {
   bots_starting_positions = fopen("../../../../warehouse-CW-model/bots_starting_positions.csv", "r");
-  f = fopen("../../../../warehouse-CW-model/full_actions_log.txt", "w");
-  sku_mileage = fopen("../../../../warehouse-CW-model/sku_mileage.txt", "w");
+  f = fopen("../../../../warehouse-CW-model/model_output/full_actions_log.txt", "w");
+  sku_mileage = fopen("../../../../warehouse-CW-model/model_output/sku_mileage.txt", "w");
   const char *directory_path = "../../../../warehouse-CW-model/TEST3-SIMSIM";
   struct dirent *entry;
   DIR *dp = opendir(directory_path);

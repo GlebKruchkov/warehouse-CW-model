@@ -309,7 +309,9 @@ void ConveyorsInit()
             insert_data(&(Store.db), -1, row, col, -1, 0);
         }
     }
-    
+
+    Store.event_id = 1;
+    Store.glb_time = 1;
     Store.cur_file = 0;
 
     for (int i = 0; i < MAX_ROBOTS + 1; ++i) {

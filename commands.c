@@ -161,15 +161,15 @@ void move_robot(robot* r, double time) {
       fprintf(
         f,
         "%*d %*d %*d    finishMotion       %*s     %*s     %*d    %*d   %*d\n",
-        6, event_id,
-        6, glb_time,
+        6, Store.event_id,
+        6, Store.glb_time,
         4, r->id + 1,
         4, Store.vertexes[r->current_waypoint],
         4, Store.vertexes[r->path[r->current_waypoint_on_path]],
         4, box_type_for_log,
         4, 0,
         2, 0);
-      event_id += 1;
+      Store.event_id += 1;
       r->started = false;
       r->cur_pos = end;
       r->current_waypoint = r->path[r->current_waypoint_on_path];
@@ -190,15 +190,15 @@ void move_robot(robot* r, double time) {
         fprintf(
           f,
           "%*d %*d %*d     startMotion       %*s     %*s     %*d    %*d   %*d\n",
-          6, event_id,
-          6, glb_time,
+          6, Store.event_id,
+          6, Store.glb_time,
           4, r->id + 1,
           4, Store.vertexes[r->current_waypoint],
           4, Store.vertexes[r->path[r->current_waypoint_on_path]],
           4, box_type_for_log,
           4, 0,
           2, 0);
-        event_id += 1;
+        Store.event_id += 1;
         r->started = true;
       }
       r->cur_pos.x += (dx * distance_to_move);
@@ -480,7 +480,7 @@ void Swap_Boxes(sqlite3 **db1, int col, int row1, int row2) {
     insert_data(db1, Store.conveyor[col].boxes[row1].SKU, row1, col, Store.conveyor[col].boxes[row1].width, Store.conveyor[col].box_quantity);
 }
 
-int Remove_Boxes(sqlite3 **db1, int type, int *time, int *l_id, int process) {
+int Remove_Boxes(sqlite3 **db1, int type, int *l_id, int process) {
     int col = Store.robots[process - 1].col;
     struct sqlite3 * db = (struct sqlite3 *) *db1;
 
@@ -555,7 +555,7 @@ int CellIdFromName(char* name) {
   return 7 + code * 6 - (int)(name[7] - '0');
 }
 
-void Init_Commands(int *event_id, int *rec_id, int *glb_time, const char *filename) {
+void Init_Commands(int *rec_id, const char *filename) {
     FILE *file1 = fopen(filename, "r");
     Store.request.req_num = 0;
     Store.request.total = 0;
@@ -572,8 +572,8 @@ void Init_Commands(int *event_id, int *rec_id, int *glb_time, const char *filena
 
     (*rec_id) += 1;
 
-    fprintf(f, "%*d %*d       startPalletize %s", 6, *event_id, 6, *glb_time, strtok(line, ","));
-    (*event_id) += 1;
+    fprintf(f, "%*d %*d       startPalletize %s", 6, Store.event_id, 6, Store.glb_time, strtok(line, ","));
+    (Store.event_id) += 1;
     fgets(line, sizeof(line), file1);
 
     while (fgets(line, sizeof(line), file1)) {

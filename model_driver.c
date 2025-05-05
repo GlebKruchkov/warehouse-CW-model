@@ -45,7 +45,7 @@ void model_event (state *s, tw_bf *bf, message *in_msg, tw_lp *lp) {
   }
   if (self == 0) { // we are at the main process (head)
     if (Store.cur_robot == 0) {
-      glb_time += 1; // one tick done
+      Store.glb_time += 1; // one tick done
     }
     int cur_robot = Store.cur_robot;
     if (Store.robots[cur_robot].is_free == true) { // if the robot can take the new task
@@ -56,8 +56,8 @@ void model_event (state *s, tw_bf *bf, message *in_msg, tw_lp *lp) {
           (Store.sku_is_adding[i] == true && Store.cnt_boxes_type[i] < Store.max_boxes_for_each_sku[i])) { // if we started to add box of type "I" we need to add it till the border
         // if (Store.cnt_boxes_type[i] <= CONST_THRESHOLD) { // uncomment this statement and comment upper if you want constant threshold
           if (Store.sku_is_adding[i] == false) { // if we just started adding
-            fprintf(f, "%*d %*d     startDepalletize %d\n", 6, event_id, 6, glb_time, i + 1);
-            event_id += 1;
+            fprintf(f, "%*d %*d     startDepalletize %d\n", 6, Store.event_id, 6, Store.glb_time, i + 1);
+            Store.event_id += 1;
             Store.sku_is_adding[i] = true;
           }
 
@@ -79,8 +79,8 @@ void model_event (state *s, tw_bf *bf, message *in_msg, tw_lp *lp) {
           break;
         } else {
           if (Store.sku_is_adding[i] == true) {
-            fprintf(f, "%*d %*d    finishDepalletize %d\n", 6, event_id, 6, glb_time, i + 1);
-            event_id += 1;
+            fprintf(f, "%*d %*d    finishDepalletize %d\n", 6, Store.event_id, 6, Store.glb_time, i + 1);
+            Store.event_id += 1;
             Store.sku_is_adding[i] = false;
           }
         }
@@ -113,10 +113,10 @@ void model_event (state *s, tw_bf *bf, message *in_msg, tw_lp *lp) {
           } else {
             if (Store.cur_file != 0) {
               rec_id++;
-              fprintf(f, "%*d %*d      finishPalletize %s", 6, event_id, 6, glb_time, Store.cur_order);
-              event_id += 1;
+              fprintf(f, "%*d %*d      finishPalletize %s", 6, Store.event_id, 6, Store.glb_time, Store.cur_order);
+              Store.event_id += 1;
             }
-            Init_Commands(&(event_id), &(rec_id), &(glb_time), Store.files[Store.cur_file]);
+            Init_Commands(&(rec_id), Store.files[Store.cur_file]);
             Store.cur_file += 1;
           }
         }
@@ -158,15 +158,15 @@ void model_event (state *s, tw_bf *bf, message *in_msg, tw_lp *lp) {
           fprintf(
             f,
             "%*d %*d %*d     movebox2bot       %*s     %*s     %*d    %*d   %*d\n",
-            6, event_id,
-            6, glb_time,
+            6, Store.event_id,
+            6, Store.glb_time,
             4, self,
             4, Store.vertexes[Store.robots[self - 1].current_waypoint],
             4, Store.vertexes[Store.robots[self - 1].goal_waypoint],
             4, Store.robots[self - 1].box_to_add + 1,
             4, 0,
             2, 0);
-          event_id += 1;
+          Store.event_id += 1;
 
           int path_length;
           int* path = dijkstra(
@@ -190,15 +190,15 @@ void model_event (state *s, tw_bf *bf, message *in_msg, tw_lp *lp) {
           fprintf(
             f,
             "%*d %*d %*d movebox2channel       %*s     %*s     %*d    %*d   %*d\n",
-            6, event_id,
-            6, glb_time,
+            6, Store.event_id,
+            6, Store.glb_time,
             4, self,
             4, Store.vertexes[Store.robots[self - 1].current_waypoint],
             4, Store.vertexes[Store.robots[self - 1].goal_waypoint],
             4, Store.robots[self - 1].box_to_add + 1,
             4, Store.robots[self - 1].col,
             2, 0);
-          event_id += 1;
+          Store.event_id += 1;
 
           Add_Box(&(Store.db), Store.robots[self - 1].box_to_add, self);
 
@@ -230,17 +230,17 @@ void model_event (state *s, tw_bf *bf, message *in_msg, tw_lp *lp) {
             fprintf(
               f,
               "%*d %*d %*d     movebox2bot       %*s     %*s     %*d    %*d   %*d\n",
-              6, event_id,
-              6, glb_time,
+              6, Store.event_id,
+              6, Store.glb_time,
               4, self,
               4, Store.vertexes[Store.robots[self - 1].current_waypoint],
               4, Store.vertexes[Store.robots[self - 1].goal_waypoint],
               4, Store.robots[self - 1].low_SKU + 1,
               4, 0,
               2, 0);
-            event_id += 1;
+            Store.event_id += 1;
 
-            Remove_Boxes(&(Store.db), Store.robots[self - 1].low_SKU, &(glb_time), &(event_id), self);
+            Remove_Boxes(&(Store.db), Store.robots[self - 1].low_SKU, &(Store.event_id), self);
 
             Store.robots[self - 1].has_box = true;
             Store.robots[self - 1].cur_box = Store.robots[self - 1].low_SKU; // box the robot took
@@ -270,16 +270,16 @@ void model_event (state *s, tw_bf *bf, message *in_msg, tw_lp *lp) {
             fprintf(
               f,
               "%*d %*d %*d     movebox2bot       %*s     %*s     %*d    %*d   %*d\n",
-              6, event_id,
-              6, glb_time,
+              6, Store.event_id,
+              6, Store.glb_time,
               4, self, 
               4, Store.vertexes[Store.robots[self - 1].current_waypoint], 
               4, Store.vertexes[Store.robots[self - 1].goal_waypoint], 
               4, Store.box_data[self][0] + 1, 
               4, 0, 
               2, 0);
-            event_id += 1;
-            Remove_Boxes(&(Store.db), Store.box_data[self][0], &(glb_time), &(event_id), self);
+            Store.event_id += 1;
+            Remove_Boxes(&(Store.db), Store.box_data[self][0], &(Store.event_id), self);
 
             Store.robots[self - 1].has_box = true; // robot take the box
             Store.robots[self - 1].cur_box = Store.box_data[self][0]; // box the robot took
@@ -310,15 +310,15 @@ void model_event (state *s, tw_bf *bf, message *in_msg, tw_lp *lp) {
             fprintf(
               f, 
               "%*d %*d %*d movebox2channel       %*s     %*s     %*d    %*d   %*d\n", 
-              6, event_id, 
-              6, glb_time, 
+              6, Store.event_id, 
+              6, Store.glb_time, 
               4, self, 
               4, Store.vertexes[Store.robots[self - 1].current_waypoint], 
               4, Store.vertexes[Store.robots[self - 1].goal_waypoint], 
               4, Store.robots[self - 1].low_SKU + 1,
               4, Store.robots[self - 1].col, 
               2, 0);
-            event_id += 1;
+            Store.event_id += 1;
 
             int row_to_add = 0;
             while (Store.conveyor[Store.robots[self - 1].col].boxes[row_to_add].SKU == -1) {
@@ -353,15 +353,15 @@ void model_event (state *s, tw_bf *bf, message *in_msg, tw_lp *lp) {
             fprintf(
               f,
               "%*d %*d %*d      movebox2tr       %*s     %*s     %*d    %*d   %*d\n",
-              6, event_id,
-              6, glb_time,
+              6, Store.event_id,
+              6, Store.glb_time,
               4, self,
               4, Store.vertexes[Store.robots[self - 1].current_waypoint],
               4, Store.vertexes[Store.robots[self - 1].goal_waypoint],
               4, Store.robots[self - 1].temp_reverse_SKU + 1,
               4, 0,
               2, 0);
-            event_id += 1;
+            Store.event_id += 1;
             Store.cnt_boxes_type[Store.robots[self - 1].temp_reverse_SKU] -= 1;
 
             Store.robots[self - 1].temp_reverse_SKU = -1;
@@ -386,15 +386,15 @@ void model_event (state *s, tw_bf *bf, message *in_msg, tw_lp *lp) {
             fprintf(
               f,
               "%*d %*d %*d      movebox2tr       %*s     %*s     %*d    %*d   %*d\n",
-              6, event_id,
-              6, glb_time,
+              6, Store.event_id,
+              6, Store.glb_time,
               4, self,
               4, Store.vertexes[Store.robots[self - 1].current_waypoint],
               4, Store.vertexes[Store.robots[self - 1].goal_waypoint],
               4, Store.box_data[self][0] + 1,
               4, 0,
               2, 0);
-            event_id += 1;
+            Store.event_id += 1;
 
             Store.robots[self - 1].has_box = false; // robot put the box to channel
             Store.robots[self - 1].row = -1;
@@ -430,7 +430,7 @@ void model_final (state *s, tw_lp *lp) {
   if (lp->gid == 0) {
     printf("reverse quatity: %d", rev_quantity);
     rec_id++;
-    fprintf(f, "%*d %*d      finishPalletize %s", 6, event_id, 6, glb_time, Store.cur_order);
+    fprintf(f, "%*d %*d      finishPalletize %s", 6, Store.event_id, 6, Store.glb_time, Store.cur_order);
     int dist_with_sku = 0;
     for (int sku = 0; sku < CNT_OF_SKU; ++sku) {
       fprintf(sku_mileage, "%*d %*d\n", 3, sku + 1, 13, Store.SKU_mileage[sku]);

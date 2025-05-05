@@ -31,8 +31,6 @@ static const int low_border = 1;
 static const int high_border = 51;
 
 static int is_reverse = 0;
-static int glb_time = 0;
-static int event_id = 1;
 static int control_id = 1;
 static int cur_boxes = 0;
 static int palet_type = 1;
@@ -209,6 +207,9 @@ struct _Store
     int cnt_boxes_type[50];
     int cnt_boxes_type_const[50];
     struct _conveyor conveyor[MAX_CONVEYORS];
+
+    int glb_time;
+    int event_id;
 };
 
 struct _Store Store;
@@ -244,9 +245,9 @@ extern int find_data(sqlite3 **db1, int type);
 extern int find_data_by_width(sqlite3 **db1, int type);
 extern int Add_Box(sqlite3 **db1, int type, int process);
 extern void Swap_Boxes(sqlite3 **db1, int row, int col1, int col2);
-extern int Reverse(sqlite3 **db1, int row, int col, int *time, int *l_id, int process);
-extern int Remove_Boxes(sqlite3 **db, int type, int *time, int *l_id, int process);
-extern void Init_Commands(int *event_id, int *rec_id, int *time, const char *filename);
+extern int Reverse(sqlite3 **db1, int row, int col, int *l_id, int process);
+extern int Remove_Boxes(sqlite3 **db, int type, int *l_id, int process);
+extern void Init_Commands(int *rec_id, const char *filename);
 extern bool Check(int process);
 extern int compare(const void *a, const void *b);
 extern void Send_Event(int process, message_type command, tw_lp *lp, tw_lpid *self);
