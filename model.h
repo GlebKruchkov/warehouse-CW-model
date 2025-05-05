@@ -1,7 +1,6 @@
 #ifndef _model_h
 #define _model_h
 
-#include "ross.h"
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -14,44 +13,15 @@
 #include <time.h>
 #include <string.h>
 #include <dirent.h>
+#include "model_input/config.h"
 #include "sqlite3.h"
+#include "ross.h"
 
-#define MAX_BOXES 8
-#define MAX_ROBOTS 15
-#define MAX_ROBOTS_ON_VERTEX 2 // value should be from ceil((MAX_ROBOTS + 1) / 12) to MAX_ROBOTS
-#define MAX_QUEUE_SIZE MAX_ROBOTS
-#define MAX_CONVEYORS 150
-#define MAX_FILES 14
-#define MAX_RACKS 5
-#define MAX_VERTEXES 49
-#define CNT_OF_SKU 50
-#define CONST_THRESHOLD 17
-
-static const int low_border = 1;
-static const int high_border = 51;
-
-static int is_reverse = 0;
-static int control_id = 1;
-static int cur_boxes = 0;
-static int palet_type = 1;
-static int rec_id = 1;
-static int reverse_count = 0;
-
-FILE *file;
 FILE *f;
 FILE *sku_mileage;
-FILE *f_dep;
-FILE *temp_txt;
 FILE *bots_starting_positions;
-FILE *paleta;
-FILE *csv_file;
 
-FILE *test;
-FILE *robots_positions;
-FILE *control_system_log;
-
-const static double g_robot_calc_time = 0.001;
-static const int threshold = (int)((MAX_BOXES * MAX_CONVEYORS) / (high_border - low_border));
+static const int threshold = (int)((MAX_BOXES * MAX_CONVEYORS) / (CNT_OF_SKU));
 
 static int rev_quantity = 0;
 
@@ -247,7 +217,7 @@ extern int Add_Box(sqlite3 **db1, int type, int process);
 extern void Swap_Boxes(sqlite3 **db1, int row, int col1, int col2);
 extern int Reverse(sqlite3 **db1, int row, int col, int *l_id, int process);
 extern int Remove_Boxes(sqlite3 **db, int type, int *l_id, int process);
-extern void Init_Commands(int *rec_id, const char *filename);
+extern void Init_Commands(const char *filename);
 extern bool Check(int process);
 extern int compare(const void *a, const void *b);
 extern void Send_Event(int process, message_type command, tw_lp *lp, tw_lpid *self);

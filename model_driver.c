@@ -112,11 +112,10 @@ void model_event (state *s, tw_bf *bf, message *in_msg, tw_lp *lp) {
             Store.kill_prog = true;
           } else {
             if (Store.cur_file != 0) {
-              rec_id++;
               fprintf(f, "%*d %*d      finishPalletize %s", 6, Store.event_id, 6, Store.glb_time, Store.cur_order);
               Store.event_id += 1;
             }
-            Init_Commands(&(rec_id), Store.files[Store.cur_file]);
+            Init_Commands(Store.files[Store.cur_file]);
             Store.cur_file += 1;
           }
         }
@@ -429,7 +428,6 @@ void model_event_reverse (state *s, tw_bf *bf, message *in_msg, tw_lp *lp) {
 void model_final (state *s, tw_lp *lp) {
   if (lp->gid == 0) {
     printf("reverse quatity: %d", rev_quantity);
-    rec_id++;
     fprintf(f, "%*d %*d      finishPalletize %s", 6, Store.event_id, 6, Store.glb_time, Store.cur_order);
     int dist_with_sku = 0;
     for (int sku = 0; sku < CNT_OF_SKU; ++sku) {

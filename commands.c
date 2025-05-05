@@ -555,7 +555,7 @@ int CellIdFromName(char* name) {
   return 7 + code * 6 - (int)(name[7] - '0');
 }
 
-void Init_Commands(int *rec_id, const char *filename) {
+void Init_Commands(const char *filename) {
     FILE *file1 = fopen(filename, "r");
     Store.request.req_num = 0;
     Store.request.total = 0;
@@ -569,8 +569,6 @@ void Init_Commands(int *rec_id, const char *filename) {
     char *temp_line = strtok(line, ",");
 
     strncpy(Store.cur_order, temp_line, sizeof(Store.cur_order) - 1);
-
-    (*rec_id) += 1;
 
     fprintf(f, "%*d %*d       startPalletize %s", 6, Store.event_id, 6, Store.glb_time, strtok(line, ","));
     (Store.event_id) += 1;

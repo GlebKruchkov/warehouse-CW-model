@@ -301,7 +301,6 @@ void ConveyorsInit()
     int id = 1;
     for (int row = MAX_BOXES - 1; row >= 0; --row) {
         for (int col = 0; col < MAX_CONVEYORS; ++col) {
-            int current_SKU = (low_border + (change_tmp) % (high_border - low_border));
             Store.conveyor[col].boxes[row].SKU = -1;
             Store.conveyor[col].boxes[row].width = -1;
             Store.conveyor[col].boxes[row].empty = 1;
